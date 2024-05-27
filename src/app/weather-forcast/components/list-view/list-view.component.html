@@ -1,0 +1,72 @@
+<div>
+  <h1 class="header mt-5" tabindex="0">Weather Forecast For Next 5 Days</h1>
+  <ul
+    class="list-group list-group-horizontal-lg justify-content-center"
+    tabindex="0"
+  >
+    <li
+      tabindex="0"
+      class="list-group-item border-0"
+      *ngFor="let item of data | keyvalue"
+    >
+      <div class="card text-body" style="border-radius: 10px; min-height: 100%">
+        <div class="card-body p-2">
+          <div class="d-flex p-1">
+            <h2 class="day flex-grow-1" tabindex="0">
+              {{ item.key | date : "EEEE, MMM dd" }}
+            </h2>
+          </div>
+
+          <div class="d-flex flex-row justify-content-around mt-4 mb-1">
+            <div>
+              <h6 class="display-8 mb-0 font-weight-bold" tabindex="0">
+                {{ item.value.max }} °C
+              </h6>
+              <span class="small" style="color: #868b94" tabindex="0"
+                >Max Temp</span
+              >
+            </div>
+            <div>
+              <h6 class="display-8 mb-0 font-weight-bold" tabindex="0">
+                {{ item.value.min }} °C
+              </h6>
+              <span class="small" style="color: #868b94" tabindex="0"
+                >Min Temp</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="d-flex gap-4 flex-md-row flex-sm-column align-items-center"
+          >
+            <div class="flex-grow-1" style="font-size: 1rem">
+              <div class="flex-column">
+                <!-- <i class="" style="color:"></i> -->
+                <div class="display-8 font-weight-bold" tabindex="0">
+                  {{ item.value.windSpeed | speed }} km/hr
+                </div>
+                <p
+                  class="text-center small"
+                  style="color: #868b94"
+                  tabindex="0"
+                >
+                  WindSpeed
+                </p>
+              </div>
+            </div>
+            <div>
+              <img
+                src="assets/icons/{{ item.value.icon }}.png"
+                alt="{{ item.value.description }}"
+                tabindex="0"
+              />
+              <p class="text-center mb-0" tabindex="0">
+                {{ item.value.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
