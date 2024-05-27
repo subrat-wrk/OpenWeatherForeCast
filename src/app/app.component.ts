@@ -10,6 +10,7 @@ import {
   map,
   of,
   switchMap,
+  tap,
 } from 'rxjs';
 import { SearchComponent } from './weather-forcast/components/search/search.component';
 import { Cities, LoadingStatus } from './constant';
@@ -91,6 +92,9 @@ export class AppComponent {
     this.forecastSubject
       .pipe(
         distinctUntilChanged(),
+        tap(() => {
+          this.LoadingStatus = LoadingStatus.LOADING;
+        }),
         switchMap((city: any) => this.forecastService.getWeather(city)),
         map((r: any) => r.list),
         takeUntilDestroyed(this.destroyRef)
@@ -132,7 +136,6 @@ export class AppComponent {
 
   getWeatherForecast(cityName: string) {
     this.activeCity = cityName;
-    this.LoadingStatus = LoadingStatus.LOADING;
     this.forecastSubject.next(cityName);
   }
 
