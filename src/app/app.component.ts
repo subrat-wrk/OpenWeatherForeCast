@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Subject,
+  catchError,
   debounceTime,
   distinctUntilChanged,
   map,
@@ -53,17 +54,17 @@ import { DayForecast, Forecast, Weather } from './models/weather.model';
           (onSearch)="setWeatherForecastList($event)"
         ></app-search> -->
         <ng-container *ngIf="LoadingStatus === LoadingStatusConstant.IDLE">
-          <div class="d-flex justify-content-center mt-5">
+          <p class="d-flex justify-content-center mt-5">
             Please select a city to know the forecast.
-          </div>
+          </p>
         </ng-container>
         <ng-container *ngIf="LoadingStatus === LoadingStatusConstant.SUCCESS">
           <app-list-view [data]="weatherForecastList"></app-list-view>
         </ng-container>
         <ng-container *ngIf="LoadingStatus === LoadingStatusConstant.ERROR">
-          <div class="alert alert-danger" role="alert">
+          <p class="alert alert-danger" role="alert">
             Error while fetching data
-          </div>
+          </p>
         </ng-container>
         <ng-container *ngIf="LoadingStatus === LoadingStatusConstant.LOADING">
           <div class="d-flex justify-content-center mt-5">
@@ -95,15 +96,26 @@ export class AppComponent {
         tap(() => {
           this.LoadingStatus = LoadingStatus.LOADING;
         }),
-        switchMap((city: any) => this.forecastService.getWeather(city)),
+        switchMap((city: any) =>
+          this.forecastService.getWeather(city).pipe(
+            catchError(() => {
+              return of({ list: [] });
+            })
+          )
+        ),
         map((r: any) => r.list),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (list: Forecast[]) => {
           console.log(list);
-          this.weatherForecastList =
-            this.forecastService.getForecastByDay(list);
+          if (!list || (list && list.length === 0)) {
+            this.weatherForecastList = {};
+          } else {
+            this.weatherForecastList =
+              this.forecastService.getForecastByDay(list);
+          }
+
           this.LoadingStatus = LoadingStatus.SUCCESS;
         },
         error: () => {

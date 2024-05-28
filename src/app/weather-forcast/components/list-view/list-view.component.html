@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="data && (data | keyvalue).length > 0; else noData">
   <h1 class="header mt-5" tabindex="0">Weather Forecast For Next 5 Days</h1>
   <ul
     class="list-group list-group-horizontal-lg justify-content-center"
@@ -22,17 +22,13 @@
               <h6 class="display-8 mb-0 font-weight-bold" tabindex="0">
                 {{ item.value.max }} °C
               </h6>
-              <span class="small" style="color: #868b94" tabindex="0"
-                >Max Temp</span
-              >
+              <p class="small" style="color: #868b94" tabindex="0">Max Temp</p>
             </div>
             <div>
               <h6 class="display-8 mb-0 font-weight-bold" tabindex="0">
                 {{ item.value.min }} °C
               </h6>
-              <span class="small" style="color: #868b94" tabindex="0"
-                >Min Temp</span
-              >
+              <p class="small" style="color: #868b94" tabindex="0">Min Temp</p>
             </div>
           </div>
 
@@ -70,3 +66,6 @@
     </li>
   </ul>
 </div>
+<ng-template #noData>
+  <p class="text-center mt-4">No Data Available</p>
+</ng-template>
